@@ -32,8 +32,18 @@ body {
     margin-top: 25px;
 }
 
+.clear {
+    position: absolute;
+    right: 0;
+}
+
 li {
+    position: relative;
     margin: 12px;
+}
+
+li:hover {
+    cursor: pointer;
 }
 
 .strike-text {
