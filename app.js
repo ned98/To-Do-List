@@ -1,41 +1,92 @@
-let btnAdd = document.getElementById("btnAdd");
-let btnReset = document.getElementById("btnReset");
-let ol = document.getElementById("ol");
+let btnAdd = $("#btnAdd");
+let ol = $("ol");
+let input = $("input");
+let btnReset = $(".btnReset");
 //let inputVal = $(".input");
-// let btnAdd = $(".btnAdd");
-// let btnReset = $(".btnReset");
 //let li = $("li");
 
 
-// Create a new list item when clicking on the "Add" button
-btnAdd.addEventListener("click", function () {
+// let LIST = [];
+// let id;
 
-    let input = $("input");
+// let data = localStorage.getItem("todo");
+
+// if (data) {
+//     LIST = JSON.parse(data);
+//     id = LIST.length; // set the id to the last one in the list
+//     loadList(LIST);
+// }
+// else {
+//     // if data isn't empty
+//     LIST = [];
+//     id = 0;
+// }
+
+// function loadList(arr) {
+//     arr.forEach(element => {
+
+//     });
+// }
+
+
+function add() {
     let inputVal = $("#input").val();
 
     if (inputVal == '') return;
 
     else {
         let li = document.createElement("li");
-        let clearBtn = document.createTextNode("\u00D7");
-        let span = document.createElement("span");
+        let listInput = document.createElement("input");
+        listInput.classList.add("li-input");
+        listInput.value = inputVal;
+        listInput.readOnly = true;
 
-        span.classList.add("clear");
+        let editIcon = document.createElement("i");
+        editIcon.classList.add("fas");
+        editIcon.classList.add("fa-edit");
+        editIcon.classList.add("edit");
+
+        let clearIcon = document.createElement("i");
+        clearIcon.classList.add("fas");
+        clearIcon.classList.add("fa-trash-alt");
+        clearIcon.classList.add("clear");
+
         li.classList.add("li");
-        span.prepend(clearBtn);
-        li.prepend(inputVal);
-        li.prepend(span);
+        li.append(editIcon);
+        li.append(clearIcon);
+        li.append(listInput);
 
-        ol.appendChild(li);
+        ol.append(li);
 
         input.val("");
-        //$('ol').prepend(`<li>${inputVal.val()}</li>`);
-        //inputVal.val("");
-    }
 
+        // LIST.push({
+        //     name: inputVal,
+        //     id: id
+        // });
+
+        // localStorage.setItem("todo", JSON.stringify(LIST));
+        // id++;
+    }
+}
+
+// Create a new list item when clicking the "Add" button
+btnAdd.click(function () {
+    add();
 });
 
-btnReset.addEventListener("click", function () {
+// Adding list with Enter key
+input.keypress(function (e) {
+
+    if (e.which === 13) {
+        e.preventDefault();
+        btnAdd.click();
+        return false;
+    }
+});
+
+//  On Reset Button Click
+btnReset.click(function () {
 
     let list = document.getElementsByClassName("li");
 
@@ -43,13 +94,14 @@ btnReset.addEventListener("click", function () {
     while (list[0]) {
         list[0].parentNode.removeChild(list[0]);
     }
-
 });
 
-ol.addEventListener("click", function (e) {
+ol.click(function (e) {
 
-    // Adds strike text if you click the 'li'
-    if (e.target.tagName == 'LI') {
+    let listInput = $(".listInput");
+
+    // Adds strike-text if you click the 'li'
+    if (e.target.tagName == 'INPUT') {
         e.target.classList.toggle("strike-text");
     }
 
@@ -58,37 +110,45 @@ ol.addEventListener("click", function (e) {
         e.target.parentElement.remove();
     }
 
+    if (e.target.classList.contains('edit')) {
+        let closestInput = $(e.target).closest('li').find('.li-input');
+
+        if (closestInput.attr("readonly")) {
+            closestInput.removeAttr("readonly");
+        }
+
+        else {
+            closestInput.attr("readonly", true);
+        }
+
+        $(".li-input").keypress(function (e) {
+
+            if (e.which === 13) {
+                e.preventDefault();
+                closestInput.attr("readonly", true);
+                return false;
+            }
+        });
+
+        $(".li-input").focusout(function (e) {
+            closestInput.attr("readonly", true);
+        });
+    }
 });
 
 
+//localStorage.clear();
+//console.log(localStorage)
 
-
-// li.addEventListener("click", function () {
-
-//     if ($(this).hasClass('has')) {
-//         $(this).removeClass("strike-text");
-//         $(this).removeClass("has");
+// let elements = [];
+// window.onload = function () {
+//     if (localStorage.getItem("todo-elements") != null) {
+//         elements = JSON.parse(localStorage.setItem("todo-elements"));
 //     }
-
-//     else if (!$(this).hasClass("has")) {
-//         $(this).addClass("strike-text");
-//         $(this).addClass("has");
-//     }
-// });
-
-
-
-
-// btnAdd.click(function () {
-
-//     if (inputVal.val() == '') return;
-
-//     else {
-//         let li = document.createElement("li");
-//         li.prepend(inputVal.val);
-//         ol.appendChild(li);
-
-//         //$('ol').prepend(`<li>${inputVal.val()}</li>`);
-//         inputVal.val("");
-//     }
-// });
+// }
+// if (localStorage.getItem("todo-elements") == null) {
+//     localStorage.setItem("todo-elements", JSON.stringify(elements))
+// }
+// else {
+//     localStorage.setItem("todo-elements", JSON.stringify(elements))
+// }

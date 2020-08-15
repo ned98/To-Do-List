@@ -3,7 +3,7 @@ body {
 }
 
 .container {
-    background-color: #77AF9C;;
+    background-color: #77AF9C;
     width: 400px;
     margin: 0 auto;
     border-radius: 8px;
@@ -56,9 +56,29 @@ hr {
     border: 0;
 }
 
-
 h2 {
     font-size: 32px;
     padding: 5px;
+}
 
+.li-input {
+    background: #77AF9C;
+    width: 260px;
+    border-style: none;
+}
+
+.li-input:focus{
+    outline: none;
+}
+
+/* ICONS */
+
+.fa-edit {
+    float: right;
+    margin-right: 20px;
+    font-size: 14px;
+}
+
+.fa-trash-alt {
+    font-size: 14px;
 }
