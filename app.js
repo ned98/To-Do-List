@@ -1,10 +1,8 @@
+//$(document).ready(function () {
 let btnAdd = $("#btnAdd");
-let ol = $("ol");
+let ul = $("ul");
 let input = $("input");
-let btnReset = $(".btnReset");
-//let inputVal = $(".input");
-//let li = $("li");
-
+let btnReset = $("#btnReset");
 
 // let LIST = [];
 // let id;
@@ -41,22 +39,25 @@ function add() {
         listInput.value = inputVal;
         listInput.readOnly = true;
 
+        let circleIcon = document.createElement("i");
+        circleIcon.classList.add("fa", "fa-circle-thin", "icon", "toggle-icon");
+
+        let checkedIcon = document.createElement("i");
+        checkedIcon.classList.add("fas", "fa-check-circle", "icon");
+
         let editIcon = document.createElement("i");
-        editIcon.classList.add("fas");
-        editIcon.classList.add("fa-edit");
-        editIcon.classList.add("edit");
+        editIcon.classList.add("fas", "fa-edit", "edit", "icon");
 
         let clearIcon = document.createElement("i");
-        clearIcon.classList.add("fas");
-        clearIcon.classList.add("fa-trash-alt");
-        clearIcon.classList.add("clear");
+        clearIcon.classList.add("fas", "fa-trash-alt", "clear", "icon");
 
         li.classList.add("li");
+        li.append(circleIcon);
         li.append(editIcon);
         li.append(clearIcon);
         li.append(listInput);
 
-        ol.append(li);
+        ul.append(li);
 
         input.val("");
 
@@ -77,7 +78,6 @@ btnAdd.click(function () {
 
 // Adding list with Enter key
 input.keypress(function (e) {
-
     if (e.which === 13) {
         e.preventDefault();
         btnAdd.click();
@@ -87,7 +87,6 @@ input.keypress(function (e) {
 
 //  On Reset Button Click
 btnReset.click(function () {
-
     let list = document.getElementsByClassName("li");
 
     // Remove the 1st element, until there is no 1st element
@@ -96,14 +95,8 @@ btnReset.click(function () {
     }
 });
 
-ol.click(function (e) {
-
+ul.click(function (e) {
     let listInput = $(".listInput");
-
-    // Adds strike-text if you click the 'li'
-    if (e.target.tagName == 'INPUT') {
-        e.target.classList.toggle("strike-text");
-    }
 
     // Removes the 'li' if you click the "x" button
     if (e.target.classList.contains('clear')) {
@@ -116,13 +109,11 @@ ol.click(function (e) {
         if (closestInput.attr("readonly")) {
             closestInput.removeAttr("readonly");
         }
-
         else {
             closestInput.attr("readonly", true);
         }
 
         $(".li-input").keypress(function (e) {
-
             if (e.which === 13) {
                 e.preventDefault();
                 closestInput.attr("readonly", true);
@@ -134,21 +125,20 @@ ol.click(function (e) {
             closestInput.attr("readonly", true);
         });
     }
+
+    if ($(e.target).is("i") && $(e.target).hasClass('toggle-icon')) {
+        let closestInput = $(e.target).closest('li').find('.li-input');
+        let closestIcon = $(e.target).closest('i');
+        let unchecked = 'fa fa-circle-thin icon';
+        let checked = 'fas fa-check-circle icon';
+
+        if (closestIcon.hasClass("fa-circle-thin")) {
+            closestInput.addClass("strike-text").attr("readonly", true)
+            closestIcon.removeClass(unchecked).addClass(checked);
+        }
+        else {
+            closestIcon.removeClass(checked).addClass(unchecked);
+            closestInput.removeClass("strike-text");   /*.attr("readonly", false);*/ // Add this if you remove Edit btn
+        }
+    };
 });
-
-
-//localStorage.clear();
-//console.log(localStorage)
-
-// let elements = [];
-// window.onload = function () {
-//     if (localStorage.getItem("todo-elements") != null) {
-//         elements = JSON.parse(localStorage.setItem("todo-elements"));
-//     }
-// }
-// if (localStorage.getItem("todo-elements") == null) {
-//     localStorage.setItem("todo-elements", JSON.stringify(elements))
-// }
-// else {
-//     localStorage.setItem("todo-elements", JSON.stringify(elements))
-// }

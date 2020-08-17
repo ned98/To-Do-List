@@ -2,6 +2,30 @@ body {
     background: #D7FFF1;
 }
 
+ul {
+    list-style-type: none;
+}
+
+li {
+    position: relative;
+    margin: 12px;
+}
+
+li:hover {
+    cursor: pointer;
+}
+
+hr {
+    background-color: rgb(11, 95, 11);
+    height: 1px;
+    border: 0;
+}
+
+h2 {
+    font-size: 32px;
+    padding: 5px;
+}
+
 .container {
     background-color: #77AF9C;
     width: 400px;
@@ -15,6 +39,10 @@ body {
     padding: 10px;
     font-weight: 600;
     font-size: 16px;
+}
+
+.li-input {
+    margin-left: 5px;
 }
 
 .btn {
@@ -37,28 +65,8 @@ body {
     right: 0;
 }
 
-li {
-    position: relative;
-    margin: 12px;
-}
-
-li:hover {
-    cursor: pointer;
-}
-
 .strike-text {
     text-decoration: line-through;
-}
-
-hr {
-    background-color: rgb(11, 95, 11);
-    height: 1px;
-    border: 0;
-}
-
-h2 {
-    font-size: 32px;
-    padding: 5px;
 }
 
 .li-input {
@@ -72,13 +80,11 @@ h2 {
 }
 
 /* ICONS */
-
 .fa-edit {
     float: right;
     margin-right: 20px;
-    font-size: 14px;
 }
 
-.fa-trash-alt {
+.icon {
     font-size: 14px;
 }
