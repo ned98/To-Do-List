@@ -1,8 +1,11 @@
 //$(document).ready(function () {
 let btnAdd = $("#btnAdd");
-let ul = $("ul");
+let ulTodo = $("#ul-todo");
 let input = $("input");
 let btnReset = $("#btnReset");
+let toggleCompleted = $("#h1-completed");
+
+toggleCompleted.hide();
 
 // let LIST = [];
 // let id;
@@ -57,7 +60,7 @@ function add() {
         li.append(clearIcon);
         li.append(listInput);
 
-        ul.append(li);
+        ulTodo.append(li);
 
         input.val("");
 
@@ -95,23 +98,58 @@ btnReset.click(function () {
     }
 });
 
-ul.click(function (e) {
-    let listInput = $(".listInput");
+$("#ul-completed").click(function (e) {
+    let closestLi = $(e.target.closest('li'));
+    let closestInput = $(e.target).closest('li').find('.li-input');
 
+
+    $(".li-input").keypress(function (e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            closestInput.addClass("strike-text font-italic");
+            closestInput.attr("readonly", true);
+            return false;
+        }
+    });
+
+    $(".li-input").focusout(function (e) {
+        closestInput.addClass("strike-text font-italic");
+        closestInput.attr("readonly", true);
+    });
+
+
+});
+
+$("ul").click(function (e) {
     // Removes the 'li' if you click the "x" button
     if (e.target.classList.contains('clear')) {
         e.target.parentElement.remove();
     }
 
     if (e.target.classList.contains('edit')) {
+        let closestLi = $(e.target.closest('li'));
         let closestInput = $(e.target).closest('li').find('.li-input');
 
-        if (closestInput.attr("readonly")) {
+        if (closestInput.attr("readonly"), true) {
             closestInput.removeAttr("readonly");
         }
         else {
             closestInput.attr("readonly", true);
         }
+
+        //If its in ul-completed
+        if (closestInput.hasClass("strike-text") && closestLi.parent("#ul-completed")) {
+            closestInput.removeClass("strike-text font-italic");
+        }
+
+        else if (closestLi.parent("#ul-todo")) {
+            closestInput.removeClass("strike-text font-italic");
+        }
+
+        else if (closestLi.parent("#ul-completed")) {
+            closestInput.addClass("strike-text font-italic");
+        }
+
 
         $(".li-input").keypress(function (e) {
             if (e.which === 13) {
@@ -126,19 +164,48 @@ ul.click(function (e) {
         });
     }
 
+
     if ($(e.target).is("i") && $(e.target).hasClass('toggle-icon')) {
+        let closestLi = $(e.target.closest('li'));
         let closestInput = $(e.target).closest('li').find('.li-input');
         let closestIcon = $(e.target).closest('i');
         let unchecked = 'fa fa-circle-thin icon';
         let checked = 'fas fa-check-circle icon';
 
         if (closestIcon.hasClass("fa-circle-thin")) {
-            closestInput.addClass("strike-text").attr("readonly", true)
+            closestInput.addClass("strike-text font-italic").attr("readonly", true)
             closestIcon.removeClass(unchecked).addClass(checked);
         }
         else {
             closestIcon.removeClass(checked).addClass(unchecked);
-            closestInput.removeClass("strike-text");   /*.attr("readonly", false);*/ // Add this if you remove Edit btn
+            closestInput.removeClass("strike-text font-italic");   /*.attr("readonly", false);*/ // Add this if you remove Edit btn
+        }
+
+        if (closestIcon.hasClass("fa-check-circle")) {
+            toggleCompleted.show();
+            $("#ul-completed").append(closestLi);
+        }
+        else {
+            $("#ul-todo").append(closestLi);
+        }
+
+        // Checks if ul-completed is Empty and shows/hides it
+        if ($('#ul-completed').is(':empty')) {
+            $("#h1-completed").hide();
+        }
+        else {
+            $("#h1-completed").show();
         }
     };
 });
+
+$.fn.hasAttr = function (name) {
+    return this.attr(name) !== undefined;
+}
+
+// jQuery.fn.toggleAttr = function (attr) {
+//     return this.each(function () {
+//         var $this = $(this);
+//         $this.attr(attr) ? $this.removeAttr(attr) : $this.attr(attr, attr);
+//     });
+// };

@@ -6,6 +6,7 @@
     <title>To Do App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/eeb2d75458.js" crossorigin="anonymous"></script>
 
@@ -15,16 +16,33 @@
 
     <div class="container">
 
-        <h2>To-Do List</h2>
-
-        <input id="input" type="text">
-        <button class="btn" id="btnAdd">Add</button>
-        <button class="btn" id="btnReset">Reset</button>
+        <div id="div-btnReset">
+            <h1 id="h1-add-item">ADD ITEM</h1>
+            <button class="btn" id="btnReset">Reset</button>
+        </div>
 
         <hr>
 
-        <div class="list">
-            <ul id="ul"></ul>
+        <input id="input" type="text" placeholder="Add a task">
+        <button class="btn" id="btnAdd">Add</button>
+
+
+        <div id="h1-todo">
+            <h1 class="mt-30">TO DO</h1>
+            <hr>
+        </div>
+
+        <div class="todo">
+            <ul id="ul-todo"></ul>
+        </div>
+
+        <div id="h1-completed">
+            <h1 class="mt-30">COMPLETED</h1>
+            <hr>
+        </div>
+
+        <div class="completed">
+            <ul id="ul-completed"></ul>
         </div>
 
     </div>
