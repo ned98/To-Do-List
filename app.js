@@ -54,12 +54,12 @@ $("#btnReset").click(function () {
     let list = document.getElementsByClassName("li");
 
     if (confirm("Are you sure?") == false) return;
-    else {
-        // Remove the 1st element, until there is no 1st element
-        while (list[0]) {
-            list[0].parentNode.removeChild(list[0]);
-        }
+
+    // Remove the 1st element, until there is no 1st element
+    while (list[0]) {
+        list[0].parentNode.removeChild(list[0]);
     }
+
     localStorage.removeItem('todos');
 });
 
@@ -202,5 +202,4 @@ function deleteTodo(todo) {
 
     todos.splice(todos.indexOf(todo), 1);                // Removes the todo from todos list
     localStorage.setItem('todos', JSON.stringify(todos)); // Updated the localStorage
-
 }
