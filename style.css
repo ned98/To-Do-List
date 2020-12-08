@@ -2,7 +2,7 @@
     font-family: Lato, sans-serif;
 }
 body {
-    background: #fff;
+    background: #292a2a;
 }
 
 ul {
@@ -78,12 +78,12 @@ hr {
     outline: none;
 }
 
-.li-input {
+.li-text {
+    display: inline;
     color: rgb(26, 26, 26);
     font-size: 20px;
     background-color:rgb(236, 236, 236);
     margin-left: 10px;
-    width: 260px;
     border-style: none;
     -webkit-transition: all ease-in-out 0.25s;
     -moz-transition: all ease-in-out 0.25s;
@@ -91,7 +91,7 @@ hr {
     transition: all ease-in-out 0.25s;
 }
 
-.li-input:focus{
+.li-text:focus{
     outline: none;
 }
 
@@ -120,7 +120,6 @@ hr {
 }
 
 .strike-text {
-    /* color: #b3b3b3; */
     text-decoration: line-through;
     transform:translateX(7px);
     -webkit-transition: all ease-in-out 0.25s;
@@ -155,4 +154,22 @@ hr {
     font-style: italic;
   }
   
-  
+  @keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    } 
+  }
+
+.shake {
+    animation: shake .1s linear;
+    animation-iteration-count: 3;
+}

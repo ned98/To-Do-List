@@ -1,103 +1,106 @@
-//$(document).ready(function () {
 let btnAdd = $("#btnAdd");
 let toggleCompleted = $("#div-h1-completed");
+let input = $("#input");
 
 toggleCompleted.hide();
 
-function add() {
+$(document).ready(function () {
+    showTodos();
+});
 
-    if ($("#input").val() == '') return; // No empty inputs on main input
+function addTodo() {
+    if (input.val() === '') {   // Check if input is empty
+        input.addClass('shake');
 
-    let li = document.createElement("li");
-    let listInput = document.createElement("input");
-    listInput.classList.add("li-input");
-    listInput.value = $("#input").val();
-    listInput.readOnly = true;
+        setTimeout(function () {
+            input.removeClass('shake');
+        }, 950);
 
-    let circleIcon = document.createElement("i");
-    circleIcon.classList.add("fa", "fa-circle-thin", "icon", "toggle-icon");
+        return;
+    }
 
-    let checkedIcon = document.createElement("i");
-    checkedIcon.classList.add("fas", "fa-check-circle", "icon");
+    let element =
+        `<li class="li">
+            <i class="fa fa-circle-thin icon toggle-icon" aria-hidden="true"></i>
+            <i class="fas fa-edit edit icon" aria-hidden="true"></i>
+            <i class="fas fa-trash-alt clear icon" aria-hidden="true"></i>
+            <p class="li-text" contenteditable="false">${input.val()}</p>
+        </li>`;
 
-    let editIcon = document.createElement("i");
-    editIcon.classList.add("fas", "fa-edit", "edit", "icon");
+    $("#ul-todo").append(element);
 
-    let clearIcon = document.createElement("i");
-    clearIcon.classList.add("fas", "fa-trash-alt", "clear", "icon");
+    // Add to localStorage
+    saveToLocalStorage(input.val());
 
-    li.classList.add("li");
-    li.append(circleIcon);
-    li.append(editIcon);
-    li.append(clearIcon);
-    li.append(listInput);
-
-    $("#ul-todo").append(li);
-    $("#input").val(""); // Clear the input on pressing "Add" or Enter key
+    input.val(''); // Clear the input on pressing "Add" or Enter key
 }
 
 // Create a new list item when clicking "Add" button
 btnAdd.click(function () {
-    add();
+    addTodo();
 });
 
 // Adding list item with Enter key
-$("#input").keypress(function (e) {
+input.keypress(function (e) {
     if (e.which === 13) {
         e.preventDefault();
         btnAdd.click();
         return false;
     }
 });
+
 //  On Reset Button Click
 $("#btnReset").click(function () {
     let list = document.getElementsByClassName("li");
 
     if (confirm("Are you sure?") == false) return;
-
-    // Remove the 1st element, until there is no 1st element
-    while (list[0]) {
-        list[0].parentNode.removeChild(list[0]);
+    else {
+        // Remove the 1st element, until there is no 1st element
+        while (list[0]) {
+            list[0].parentNode.removeChild(list[0]);
+        }
     }
+    localStorage.removeItem('todos');
 });
 
 $("#ul-completed").click(function (e) {
-    let closestInput = $(e.target).closest('li').find('.li-input');
+    let closestInput = $(e.target).closest('li').find('.li-text');
 
-    $(".li-input").keypress(function (e) {
+    $(".li-text").keypress(function (e) {
         if (e.which === 13) {
             e.preventDefault();
             closestInput.addClass("strike-text font-italic");
-            closestInput.attr("readonly", true);
+            closestInput.attr('contenteditable', 'false');
             return false;
         }
     });
 
-    $(".li-input").focusout(function (e) {
+    $(".li-text").focusout(function () {
         closestInput.addClass("strike-text font-italic");
-        closestInput.attr("readonly", true);
+        closestInput.attr('contenteditable', 'false');
     });
 });
 
 $("ul").click(function (e) {
-    let closestLi = $(e.target.closest('li'));
-    let closestInput = $(e.target).closest('li').find('.li-input');
+    let closestLi = $(e.target).closest('li');
+    let closestInput = $(e.target).closest('li').find('.li-text');
 
     // Removes the 'li' if you click the "trash icon" button
-    if (e.target.classList.contains('clear')) {
+    if ($(e.target).hasClass('clear')) {
         e.target.parentElement.remove();
+        deleteTodo(closestInput.text());
     }
 
     if (e.target.classList.contains('edit')) {
 
-        if (closestInput.attr("readonly"), true) {
-            closestInput.removeAttr("readonly");
-        }
-        else {
-            closestInput.attr("readonly", true);
+        if (closestInput.attr('contenteditable', false)) {
+            closestInput.attr('contenteditable', true);
         }
 
-        //If its in '#ul-completed'
+        else {
+            closestInput.attr('contenteditable', false);
+        }
+
         if (closestInput.hasClass("strike-text") && closestLi.parent("#ul-completed")) {
             closestInput.removeClass("strike-text font-italic");
         }
@@ -108,20 +111,18 @@ $("ul").click(function (e) {
             closestInput.addClass("strike-text font-italic");
         }
 
-
-        $(".li-input").keypress(function (e) {
+        $(".li-text").keypress(function (e) {
             if (e.which === 13) {
                 e.preventDefault();
-                closestInput.attr("readonly", true);
+                closestInput.attr('contenteditable', false);
                 return false;
             }
         });
 
-        $(".li-input").focusout(function () {
-            closestInput.attr("readonly", true);
+        $(".li-text").focusout(function () {
+            closestInput.attr('contenteditable', false);
         });
     }
-
 
     if ($(e.target).is("i") && $(e.target).hasClass('toggle-icon')) {
         let closestIcon = $(e.target).closest('i');
@@ -129,12 +130,12 @@ $("ul").click(function (e) {
         let checked = 'fas fa-check-circle icon';
 
         if (closestIcon.hasClass("fa-circle-thin")) {
-            closestInput.addClass("strike-text font-italic").attr("readonly", true)
+            closestInput.addClass("strike-text font-italic").attr('contenteditable', false);
             closestIcon.removeClass(unchecked).addClass(checked);
         }
         else {
             closestIcon.removeClass(checked).addClass(unchecked);
-            closestInput.removeClass("strike-text font-italic");   /*.attr("readonly", false);*/ // Add this if you remove Edit btn
+            closestInput.removeClass("strike-text font-italic");  /* .attr('contenteditable', true); */ // Add this if you remove Edit btn
         }
 
         if (closestIcon.hasClass("fa-check-circle")) {
@@ -145,7 +146,6 @@ $("ul").click(function (e) {
             $("#ul-todo").append(closestLi);
         }
 
-        // Checks if ul-completed is Empty and shows/hides it
         if ($('#ul-completed').is(':empty')) {
             $("#h1-completed").hide();
         }
@@ -154,3 +154,53 @@ $("ul").click(function (e) {
         }
     };
 });
+
+
+function saveToLocalStorage(todo) {
+    let todos;
+
+    if (localStorage.getItem('todos') === null) {
+        todos = [];
+    } else {
+        todos = JSON.parse(localStorage.getItem('todos'));
+    }
+
+    todos.push(todo);
+    localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+function showTodos() {
+    let todos;
+
+    if (localStorage.getItem('todos') === null) {
+        todos = [];
+    } else {
+        todos = JSON.parse(localStorage.getItem('todos'));
+    }
+
+    todos.forEach(element => {
+        element =
+            `<li class="li">
+                <i class="fa fa-circle-thin icon toggle-icon" aria-hidden="true"></i>
+                <i class="fas fa-edit edit icon" aria-hidden="true"></i>
+                <i class="fas fa-trash-alt clear icon" aria-hidden="true"></i>
+                <p class="li-text" contenteditable="false">${element}</p>
+            </li>`;
+
+        $("#ul-todo").append(element);
+    });
+}
+
+function deleteTodo(todo) {
+    let todos;
+
+    if (localStorage.getItem('todos') === null) {
+        todos = [];
+    } else {
+        todos = JSON.parse(localStorage.getItem('todos'));
+    }
+
+    todos.splice(todos.indexOf(todo), 1);                // Removes the todo from todos list
+    localStorage.setItem('todos', JSON.stringify(todos)); // Updated the localStorage
+
+}
