@@ -101,6 +101,7 @@ $("ul").click(function (e) {
             closestInput.attr('contenteditable', false);
         }
 
+        // TUK BUGVA
         if (closestInput.hasClass("strike-text") && closestLi.parent("#ul-completed")) {
             closestInput.removeClass("strike-text font-italic");
         }
@@ -119,8 +120,10 @@ $("ul").click(function (e) {
             }
         });
 
+        let oldTodo = closestInput.text();
         $(".li-text").focusout(function () {
             closestInput.attr('contenteditable', false);
+            updateItem(oldTodo, closestInput.text());
         });
     }
 
@@ -201,5 +204,22 @@ function deleteTodo(todo) {
     }
 
     todos.splice(todos.indexOf(todo), 1);                // Removes the todo from todos list
-    localStorage.setItem('todos', JSON.stringify(todos)); // Updated the localStorage
+    localStorage.setItem('todos', JSON.stringify(todos)); // Update the localStorage
 }
+
+function updateItem(oldTodo, newTodo) {
+    let todos;
+
+    if (localStorage.getItem('todos') === null) {
+        todos = [];
+    } else {
+        todos = JSON.parse(localStorage.getItem('todos'));
+    }
+
+    todos.splice(todos.indexOf(oldTodo), 1, newTodo);
+    localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+// to do
+// update localstorage on edited text
+// save list to completed
