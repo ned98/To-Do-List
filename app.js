@@ -1,8 +1,5 @@
 let btnAdd = $("#btnAdd");
-let toggleCompleted = $("#div-h1-completed");
 let input = $("#input");
-
-toggleCompleted.hide();
 
 $(document).ready(function () {
     showTodos();
@@ -63,23 +60,6 @@ $("#btnReset").click(function () {
     localStorage.removeItem('todos');
 });
 
-$("#ul-completed").click(function (e) {
-    let closestInput = $(e.target).closest('li').find('.li-text');
-
-    $(".li-text").keypress(function (e) {
-        if (e.which === 13) {
-            e.preventDefault();
-            closestInput.addClass("strike-text font-italic");
-            closestInput.attr('contenteditable', 'false');
-            return false;
-        }
-    });
-
-    $(".li-text").focusout(function () {
-        closestInput.addClass("strike-text font-italic");
-        closestInput.attr('contenteditable', 'false');
-    });
-});
 
 $("ul").click(function (e) {
     let closestLi = $(e.target).closest('li');
@@ -99,17 +79,6 @@ $("ul").click(function (e) {
 
         else {
             closestInput.attr('contenteditable', false);
-        }
-
-        // TUK BUGVA
-        if (closestInput.hasClass("strike-text") && closestLi.parent("#ul-completed")) {
-            closestInput.removeClass("strike-text font-italic");
-        }
-        else if (closestLi.parent("#ul-todo")) {
-            closestInput.removeClass("strike-text font-italic");
-        }
-        else if (closestLi.parent("#ul-completed")) {
-            closestInput.addClass("strike-text font-italic");
         }
 
         $(".li-text").keypress(function (e) {
@@ -142,18 +111,11 @@ $("ul").click(function (e) {
         }
 
         if (closestIcon.hasClass("fa-check-circle")) {
-            toggleCompleted.show();
-            $("#ul-completed").append(closestLi);
+            removeElement(closestLi);
+            deleteTodo(closestInput.text());
         }
         else {
             $("#ul-todo").append(closestLi);
-        }
-
-        if ($('#ul-completed').is(':empty')) {
-            $("#h1-completed").hide();
-        }
-        else {
-            $("#h1-completed").show();
         }
     };
 });
@@ -203,7 +165,7 @@ function deleteTodo(todo) {
         todos = JSON.parse(localStorage.getItem('todos'));
     }
 
-    todos.splice(todos.indexOf(todo), 1);                // Removes the todo from todos list
+    todos.splice(todos.indexOf(todo), 1);                 // Removes the todo from todos list
     localStorage.setItem('todos', JSON.stringify(todos)); // Update the localStorage
 }
 
@@ -220,6 +182,10 @@ function updateItem(oldTodo, newTodo) {
     localStorage.setItem('todos', JSON.stringify(todos));
 }
 
-// to do
-// update localstorage on edited text
-// save list to completed
+function removeElement(target) {
+    target.animate({
+        opacity: "-=1"
+    }, 1000, function () {
+        target.remove();
+    });
+}
