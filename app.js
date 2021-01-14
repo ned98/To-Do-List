@@ -63,7 +63,7 @@ $("#btnReset").click(function () {
 
 $("ul").click(function (e) {
     let closestLi = $(e.target).closest('li');
-    let closestInput = $(e.target).closest('li').find('.li-text');
+    let closestInput = closestLi.find('.li-text');
 
     // Removes the 'li' if you click the "trash icon" button
     if ($(e.target).hasClass('clear')) {
